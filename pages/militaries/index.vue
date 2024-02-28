@@ -23,19 +23,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(militaries, index) in militaries" :key="index">
-                            <td>{{ militaries.id }}</td>
-                            <td>{{ militaries.nama }}</td>
-                            <td>{{ militaries.jenis }}</td>
-                            <td>{{ militaries.type }}</td>
-                            <td>{{ militaries.kondisi }}</td>
-                            <td>{{ militaries.tahun_produksi }}</td>
-                            <td>{{ militaries.tanggal_perolehan }}</td>
-                            <td>{{ militaries.matra }}</td>
-                            <td>{{ militaries.gambar }}</td>
+                        <tr v-for="(military, index) in militaries" :key="index">
+                            <td>{{ military.id }}</td>
+                            <td>{{ military.nama }}</td>
+                            <td>{{ military.jenis }}</td>
+                            <td>{{ military.type }}</td>
+                            <td>{{ military.kondisi }}</td>
+                            <td>{{ military.tahun_produksi }}</td>
+                            <td>{{ military.tanggal_perolehan }}</td>
+                            <td>{{ military.matra }}</td>
+                            <td>{{ military.gambar }}</td>
                             <td>
                                 <NuxtLink :to="`/militaries/${militaries.id}`" class="btn btn-success btn-sm mx-2">Ubah</NuxtLink>
-                                <button type="button" class="btn btn-danger btn-sm mx-2">Hapus</button>
+                                <button type="button" @click="$event => deleteMilitary($event, military.id)" class="btn btn-danger btn-sm mx-2">Hapus</button>
                             </td>
 
                         </tr>
@@ -61,10 +61,18 @@ import axios from 'axios';
         },
         methods: {
             getMilitaries() {
-                axios.get('http://localhost:8000/api/militaries').then(res => {
+                axios.get(`http://localhost:8000/api/militaries`).then(res => {
                     console.log(res)
                     this.militaries = res.data.militaries;
                 });
+            },
+            deleteMilitary(event, militaryId) {
+                if(confirm('Apakah anda ingin menghapis data?')) {
+                    axios.delete(`http://localhost:8000/api/militaries/${militaryId}/delete`).then(res => {
+                        this.onMounted();
+
+                    });
+                }
             }
         }
     }

@@ -7,11 +7,11 @@
                 </h4>
             </div>
             <div class="card-body">
-                <form @submit.prevent="saveMilitary" action="">
+                <form @submit.prevent="saveMilitary" action="" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label>Nama</label>
                         <input type="text" v-model="military.nama" class="form-control" />
-                        <span class="text-danger" v-if="this.errorList.nama">{{ this.errorList.nama[0] }}</span>
+                        <span class="text-danger" v-if="this.errorList.nama && !savedSuccessfully">{{ this.errorList.nama[0] }}</span>
                     </div>
                     <div class="mb-3">
                         <label>Jenis</label>
@@ -20,32 +20,34 @@
                             <option value="kendaraan">Kendaraan</option>
                             <option value="pesawat">Pesawat</option>
                         </select>
-                        <span class="text-danger" v-if="this.errorList.jenis">{{ this.errorList.jenis[0] }}</span>
+                        <span class="text-danger" v-if="this.errorList.jenis && !savedSuccessfully">{{ this.errorList.jenis[0] }}</span>
                     </div>
                     <div class="mb-3">
                         <label>Type</label>
                         <input type="text" v-model="military.type" class="form-control" />
-                        <span class="text-danger" v-if="this.errorList.type">{{ this.errorList.type[0] }}</span>
+                        <span class="text-danger" v-if="this.errorList.type && !savedSuccessfully">{{ this.errorList.type[0] }}</span>
                     </div>
                     <div class="mb-3">
                         <label>Kondisi</label>
                         <input type="text" v-model="military.kondisi" class="form-control" />
-                        <span class="text-danger" v-if="this.errorList.kondisi">{{ this.errorList.kondisi[0] }}</span>
+                        <span class="text-danger" v-if="this.errorList.kondisi && !savedSuccessfully">{{ this.errorList.kondisi[0] }}</span>
                     </div>
                     <div class="mb-3">
                         <label>Tahun Produksi</label>
                         <input type="text" v-model="military.tahun_produksi" class="form-control" />
-                        <span class="text-danger" v-if="this.errorList.tahun_produksi">{{ this.errorList.tahun_produksi[0] }}</span>
+                        <span class="text-danger" v-if="this.errorList.tahun_produksi && !savedSuccessfully">{{ this.errorList.tahun_produksi[0] }}</span>
                     </div>
                     <div class="mb-3">
                         <label>Tanggal Perolehan</label>
                         <input type="text" v-model="military.tanggal_perolehan" class="form-control" />
-                        <span class="text-danger" v-if="this.errorList.tanggal_perolehan">{{ this.errorList.tanggal_perolehan[0] }}</span>
+                        <span class="text-danger" v-if="this.errorList.tanggal_perolehan && !savedSuccessfully">{{ this.errorList.tanggal_perolehan[0] }}</span>
                     </div>
                     <div class="mb-3">
                         <label>Gambar</label>
-                        <input type="text" v-model="military.gambar" class="form-control" />
-                        <span class="text-danger" v-if="this.errorList.gambar">{{ this.errorList.gambar[0] }}</span>
+                        <!-- Ubah input menjadi tipe file -->
+                        <input type="file" @change="onFileChange" class="form-control" accept="image/*" />
+                        <!-- Tampilkan pesan kesalahan -->
+                        <span class="text-danger" v-if="this.errorList.gambar && !savedSuccessfully">{{ this.errorList.gambar[0] }}</span>
                     </div>
                     <div class="mb-3">
                         <label>Matra</label>
@@ -55,7 +57,7 @@
                             <option value="tni-al">TNI AL</option>
                             <option value="kemhan">KEMHAN</option>
                         </select>
-                        <span class="text-danger" v-if="this.errorList.matra">{{ this.errorList.matra[0] }}</span>
+                        <span class="text-danger" v-if="this.errorList.matra && !savedSuccessfully">{{ this.errorList.matra[0] }}</span>
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -81,15 +83,26 @@
                 tahun_produksi: '',
                 tanggal_perolehan: '',
                 matra: '',
-                gambar: ''
+                gambar: null
             },
-            errorList: {}
+            errorList: {},
+            savedSuccessfully: false
         }
       },
       methods: {
         saveMilitary() {
             let myThis = this;
-            axios.post('http://localhost:8000/api/militaries', this.military).then(res => {
+            let formData = new FormData();
+            formData.append('gambar', this.military.gambar);
+            formData.append('nama', this.military.nama);
+            formData.append('jenis', this.military.jenis);
+            formData.append('type', this.military.type);
+            formData.append('kondisi', this.military.kondisi);
+            formData.append('tahun_produksi', this.military.tahun_produksi);
+            formData.append('tanggal_perolehan', this.military.tanggal_perolehan);
+            formData.append('matra', this.military.matra);
+
+            axios.post('http://localhost:8000/api/militaries', formData).then(res => {
                 console.log(res, 'res');
 
                 this.military.nama = '';
@@ -99,7 +112,9 @@
                 this.military.tahun_produksi = '';
                 this.military.tanggal_perolehan = '';
                 this.military.matra = '';
-                this.military.gambar = '';
+                this.military.gambar = null;
+                this.errorList = {};  
+                this.savedSuccessfully = true;
             })
             .catch(function (error) {
                 console.log(error, 'errors')
@@ -109,6 +124,10 @@
                     }
                 }
             })
+        },
+        onFileChange(e) {
+            const file = e.target.files[0];
+            this.military.gambar = file;
         }
       }
     }
