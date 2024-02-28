@@ -7,6 +7,9 @@
                 </h4>
             </div>
             <div class="card-body">
+                <div v-if="isLoading">
+                    <Loading :title="isLoadingTitle" />
+                </div>
                 <form @submit.prevent="saveMilitary" action="" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label>Nama</label>
@@ -85,6 +88,8 @@
                 matra: '',
                 gambar: null
             },
+            isLoading: false,
+            isLoadingTitle: 'Loading',
             errorList: {},
             savedSuccessfully: false
         }
@@ -92,6 +97,8 @@
       methods: {
         saveMilitary() {
             let myThis = this;
+            this.isLoading = true;
+            this.isLoadingTitle = "Saving";
             let formData = new FormData();
             formData.append('gambar', this.military.gambar);
             formData.append('nama', this.military.nama);
@@ -112,9 +119,10 @@
                 this.military.tahun_produksi = '';
                 this.military.tanggal_perolehan = '';
                 this.military.matra = '';
-                this.military.gambar = null;
+                this.military.gambar = '';
                 this.errorList = {};  
                 this.savedSuccessfully = true;
+                this.isLoading = false;
             })
             .catch(function (error) {
                 console.log(error, 'errors')

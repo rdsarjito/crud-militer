@@ -35,7 +35,7 @@
                             <td>{{ military.gambar }}</td>
                             <td>
                                 <NuxtLink :to="`/militaries/${militaries.id}`" class="btn btn-success btn-sm mx-2">Ubah</NuxtLink>
-                                <button type="button" @click="$event => deleteMilitary($event, military.id)" class="btn btn-danger btn-sm mx-2">Hapus</button>
+                                <button type="button" @click="$event => deleteMilitary(military.id)" class="btn btn-danger btn-sm mx-2">Hapus</button>
                             </td>
 
                         </tr>
@@ -62,17 +62,14 @@ import axios from 'axios';
         methods: {
             getMilitaries() {
                 axios.get(`http://localhost:8000/api/militaries`).then(res => {
-                    console.log(res)
                     this.militaries = res.data.militaries;
                 });
             },
-            deleteMilitary(event, militaryId) {
-                if(confirm('Apakah anda ingin menghapis data?')) {
-                    axios.delete(`http://localhost:8000/api/militaries/${militaryId}/delete`).then(res => {
-                        this.onMounted();
-
-                    });
-                }
+            deleteMilitary(militaryId) {
+                axios.delete(`http://localhost:8000/api/militaries/${militaryId}/delete`).then(res => {
+                    this.getMilitaries();
+                });
+                window.location.reload(true)
             }
         }
     }
