@@ -57,9 +57,9 @@
                     <div class="mb-3">
                         <label>Matra</label>
                         <select v-model="military.matra" class="form-control">
-                            <option value="TNI AU">TNI AU</option>
-                            <option value="TNI AD">TNI AD</option>
-                            <option value="TNI AL">TNI AL</option>
+                            <option value="TNI-AU">TNI-AU</option>
+                            <option value="TNI-AD">TNI-AD</option>
+                            <option value="TNI-AL">TNI-AL</option>
                             <option value="KEMHAN">KEMHAN</option>
                         </select>
                         <span class="text-danger" v-if="this.errorList.matra && !savedSuccessfully">{{ this.errorList.matra[0] }}</span>

@@ -17,6 +17,24 @@
                         <li><a @click="filterByCondition('Rusak')" class="dropdown-item" href="#">Rusak</a></li>
                     </ul>
                 </div>
+                <div class="btn-group">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Filter Matra
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a @click="filterByMatra('TNI-AU')" class="dropdown-item" href="#">TNI-AU</a></li>
+                        <li><a @click="filterByMatra('TNI-AD')" class="dropdown-item" href="#">TNI-AD</a></li>
+                        <li><a @click="filterByMatra('TNI-AL')" class="dropdown-item" href="#">TNI-AL</a></li>
+                        <li><a @click="filterByMatra('MENHAN')" class="dropdown-item" href="#">MENHAN</a></li>
+                    </ul>
+                </div>
+                <div class="mt-3">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate" v-model="startDate" @change="filterByDateRange">
+
+                    <label for="endDate" class="ms-3">End Date:</label>
+                    <input type="date" id="endDate" v-model="endDate" @change="filterByDateRange">
+                </div>
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -42,7 +60,6 @@
                             <td>{{ military.tahun_produksi }}</td>
                             <td>{{ military.tanggal_perolehan }}</td>
                             <td>{{ military.matra }}</td>
-                            <!-- <td>{{ military.gambar }}</td> -->
                             <td>
                                 <img :src="getImageUrl(military.gambar)" alt="Military Image" style="max-width: 100px; max-height: 100px;">
                             </td>
@@ -92,6 +109,24 @@
                     this.filteredMilitaries = this.militaries.filter(military => military.kondisi === 'Baru');
                 } else if (condition === 'Rusak') {
                     this.filteredMilitaries = this.militaries.filter(military => military.kondisi === 'Rusak');
+                }
+            },
+            filterByMatra(matra) {
+                console.log(matra)
+                this.filteredMilitaries = this.militaries.filter(military => military.matra === matra);
+                console.log(this.filteredMilitaries)
+            },
+            filterByDateRange() {
+                if (this.startDate && this.endDate) {
+                    this.filteredMilitaries = this.militaries.filter(military => {
+                        const militaryDate = new Date(military.tanggal_perolehan);
+                        const startDate = new Date(this.startDate);
+                        const endDate = new Date(this.endDate);
+
+                        return militaryDate >= startDate && militaryDate <= endDate;
+                    });
+                } else {
+                    this.filteredMilitaries = this.militaries;
                 }
             },
             deleteMilitary(militaryId) {
