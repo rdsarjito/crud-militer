@@ -33,9 +33,9 @@
                     <div class="mb-3">
                         <label>Kondisi</label>
                         <select v-model="military.kondisi" class="form-control">
-                            <option value="senjata">Baru</option>
-                            <option value="kendaraan">Bekas</option>
-                            <option value="pesawat">Rusak</option>
+                            <option value="Baru">Baru</option>
+                            <option value="Bekas">Bekas</option>
+                            <option value="Rusak">Rusak</option>
                         </select>
                         <span class="text-danger" v-if="this.errorList.kondisi && !savedSuccessfully">{{ this.errorList.kondisi[0] }}</span>
                     </div>
@@ -57,10 +57,10 @@
                     <div class="mb-3">
                         <label>Matra</label>
                         <select v-model="military.matra" class="form-control">
-                            <option value="tni-au">TNI AU</option>
-                            <option value="tni-ad">TNI AD</option>
-                            <option value="tni-al">TNI AL</option>
-                            <option value="kemhan">KEMHAN</option>
+                            <option value="TNI AU">TNI AU</option>
+                            <option value="TNI AD">TNI AD</option>
+                            <option value="TNI AL">TNI AL</option>
+                            <option value="KEMHAN">KEMHAN</option>
                         </select>
                         <span class="text-danger" v-if="this.errorList.matra && !savedSuccessfully">{{ this.errorList.matra[0] }}</span>
                     </div>
@@ -76,7 +76,7 @@
 <script>
     import axios from 'axios';
     import Swal from 'sweetalert2';
-    
+
     export default {
       name: "militaryCreate",
       data() {
@@ -111,6 +111,7 @@
             formData.append('tahun_produksi', this.military.tahun_produksi);
             formData.append('tanggal_perolehan', this.military.tanggal_perolehan);
             formData.append('matra', this.military.matra);
+            console.log(this.military.kondisi)
 
             axios.post('http://localhost:8000/api/militaries', formData).then(res => { 
                 this.military.nama = '';
