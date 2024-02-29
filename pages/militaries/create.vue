@@ -75,7 +75,8 @@
   
 <script>
     import axios from 'axios';
-
+    import Swal from 'sweetalert2';
+    
     export default {
       name: "militaryCreate",
       data() {
@@ -102,7 +103,6 @@
             this.isLoading = true;
             this.isLoadingTitle = "Saving";
             let formData = new FormData();
-            console.log(this.military.matra);
             formData.append('gambar', this.military.gambar);
             formData.append('nama', this.military.nama);
             formData.append('jenis', this.military.jenis);
@@ -112,9 +112,7 @@
             formData.append('tanggal_perolehan', this.military.tanggal_perolehan);
             formData.append('matra', this.military.matra);
 
-            axios.post('http://localhost:8000/api/militaries', formData).then(res => {
-                console.log(res, 'res');
-
+            axios.post('http://localhost:8000/api/militaries', formData).then(res => { 
                 this.military.nama = '';
                 this.military.jenis = '';
                 this.military.type = '';
@@ -126,14 +124,26 @@
                 this.errorList = {};  
                 this.savedSuccessfully = true;
                 this.isLoading = false;
+
+                Swal.fire({
+                    title: "Selamat!",
+                    text: "Tambah Data Berhasil!",
+                    icon: "success"
+                });
             })
             .catch(function (error) {
                 console.log(error, 'errors')
                 if(error.response) {
-                    if(error.response.status = 422) {
+                    if(error.response.status == 422) {
                         myThis.errorList = error.response.data.errors;
+                        myThis.isLoading = false;
                     }
                 }
+                Swal.fire({
+                    icon: "error",
+                    title: "Maaf...",
+                    text: "Ada Kesalahan!"
+                });
             })
         },
         onFileChange(e) {

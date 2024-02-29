@@ -32,7 +32,11 @@
                     </div>
                     <div class="mb-3">
                         <label>Kondisi</label>
-                        <input type="text" v-model="military.kondisi" class="form-control" />
+                        <select v-model="military.kondisi" class="form-control">
+                            <option value="senjata">Baru</option>
+                            <option value="kendaraan">Bekas</option>
+                            <option value="pesawat">Rusak</option>
+                        </select>
                         <span class="text-danger" v-if="this.errorList.kondisi && !savedSuccessfully">{{ this.errorList.kondisi[0] }}</span>
                     </div>
                     <div class="mb-3">
@@ -71,6 +75,7 @@
 
 <script>
     import axios from 'axios';
+    import Swal from 'sweetalert2';
 
     export default {
       name: "militaryEdit",
@@ -94,13 +99,11 @@
         updateMilitary() {
             let myThis = this;
             
-            // Mengonversi gambar menjadi base64
             let reader = new FileReader();
             reader.readAsDataURL(this.military.gambar);
             reader.onload = function () {
                 myThis.military.gambar = reader.result;
 
-                // Mengirim data ke server
                 axios.put(`http://localhost:8000/api/militaries/${myThis.militaryId}/update`, myThis.military).then(res => {
                     console.log(res, 'res');
 
@@ -112,14 +115,28 @@
                     myThis.military.tanggal_perolehan = '';
                     myThis.military.matra = '';
                     myThis.military.gambar = '';
+
+                    Swal.fire({
+                        title: "Selamat!",
+                        text: "Ubah Data Berhasil!",
+                        icon: "success"
+                    }).then(() => {
+                        myThis.$router.push('/militaries');
+                    });
                 })
                 .catch(function (error) {
                     console.log(error, 'errors')
                     if(error.response) {
                         if(error.response.status = 422) {
                             myThis.errorList = error.response.data.errors;
-                        }
-                    }
+                            myThis.isLoading = false;
+                        };  
+                    };
+                    Swal.fire({
+                        icon: "error",
+                        title: "Maaf...",
+                        text: "Ada Kesalahan!"
+                    });
                 });
             };
         },
