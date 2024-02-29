@@ -42,7 +42,10 @@
                             <td>{{ military.tahun_produksi }}</td>
                             <td>{{ military.tanggal_perolehan }}</td>
                             <td>{{ military.matra }}</td>
-                            <td>{{ military.gambar }}</td>
+                            <!-- <td>{{ military.gambar }}</td> -->
+                            <td>
+                                <img :src="getImageUrl(military.gambar)" alt="Military Image" style="max-width: 100px; max-height: 100px;">
+                            </td>
                             <td>
                                 <NuxtLink :to="`/militaries/${military.id}`" class="btn btn-success btn-sm mx-2">Ubah</NuxtLink>
                                 <button type="button" @click="$event => deleteMilitary(military.id)" class="btn btn-danger btn-sm mx-2">Hapus</button>
@@ -102,7 +105,10 @@
                 }).then(() => {
                     window.location.reload(true);
                 });
-            }
+            },
+            getImageUrl(imageName) {
+                return `http://localhost:8000/api/militaries/image/${imageName}`;
+            },
         }
     }
 </script>

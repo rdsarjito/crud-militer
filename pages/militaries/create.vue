@@ -41,12 +41,12 @@
                     </div>
                     <div class="mb-3">
                         <label>Tahun Produksi</label>
-                        <input type="text" v-model="military.tahun_produksi" class="form-control" />
+                        <input type="date" v-model="military.tahun_produksi" class="form-control" />
                         <span class="text-danger" v-if="this.errorList.tahun_produksi && !savedSuccessfully">{{ this.errorList.tahun_produksi[0] }}</span>
                     </div>
                     <div class="mb-3">
                         <label>Tanggal Perolehan</label>
-                        <input type="text" v-model="military.tanggal_perolehan" class="form-control" />
+                        <input type="date" v-model="military.tanggal_perolehan" class="form-control" />
                         <span class="text-danger" v-if="this.errorList.tanggal_perolehan && !savedSuccessfully">{{ this.errorList.tanggal_perolehan[0] }}</span>
                     </div>
                     <div class="mb-3">
