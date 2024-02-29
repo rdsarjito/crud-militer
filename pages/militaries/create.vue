@@ -32,7 +32,11 @@
                     </div>
                     <div class="mb-3">
                         <label>Kondisi</label>
-                        <input type="text" v-model="military.kondisi" class="form-control" />
+                        <select v-model="military.kondisi" class="form-control">
+                            <option value="senjata">Baru</option>
+                            <option value="kendaraan">Bekas</option>
+                            <option value="pesawat">Rusak</option>
+                        </select>
                         <span class="text-danger" v-if="this.errorList.kondisi && !savedSuccessfully">{{ this.errorList.kondisi[0] }}</span>
                     </div>
                     <div class="mb-3">
