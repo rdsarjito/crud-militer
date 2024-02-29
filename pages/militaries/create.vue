@@ -47,9 +47,7 @@
                     </div>
                     <div class="mb-3">
                         <label>Gambar</label>
-                        <!-- Ubah input menjadi tipe file -->
                         <input type="file" @change="onFileChange" class="form-control" accept="image/*" />
-                        <!-- Tampilkan pesan kesalahan -->
                         <span class="text-danger" v-if="this.errorList.gambar && !savedSuccessfully">{{ this.errorList.gambar[0] }}</span>
                     </div>
                     <div class="mb-3">
@@ -100,6 +98,7 @@
             this.isLoading = true;
             this.isLoadingTitle = "Saving";
             let formData = new FormData();
+            console.log(this.military.matra);
             formData.append('gambar', this.military.gambar);
             formData.append('nama', this.military.nama);
             formData.append('jenis', this.military.jenis);

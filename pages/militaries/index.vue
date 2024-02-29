@@ -34,7 +34,7 @@
                             <td>{{ military.matra }}</td>
                             <td>{{ military.gambar }}</td>
                             <td>
-                                <NuxtLink :to="`/militaries/${militaries.id}`" class="btn btn-success btn-sm mx-2">Ubah</NuxtLink>
+                                <NuxtLink :to="`/militaries/${military.id}`" class="btn btn-success btn-sm mx-2">Ubah</NuxtLink>
                                 <button type="button" @click="$event => deleteMilitary(military.id)" class="btn btn-danger btn-sm mx-2">Hapus</button>
                             </td>
 
