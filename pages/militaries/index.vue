@@ -7,33 +7,45 @@
                 </h4>
             </div>
             <div class="card-body">
-                <div class="btn-group">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Filter Kondisi
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a @click="filterByCondition('Bekas')" class="dropdown-item" href="#">Bekas</a></li>
-                        <li><a @click="filterByCondition('Baru')" class="dropdown-item" href="#">Baru</a></li>
-                        <li><a @click="filterByCondition('Rusak')" class="dropdown-item" href="#">Rusak</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Filter Matra
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a @click="filterByMatra('TNI-AU')" class="dropdown-item" href="#">TNI-AU</a></li>
-                        <li><a @click="filterByMatra('TNI-AD')" class="dropdown-item" href="#">TNI-AD</a></li>
-                        <li><a @click="filterByMatra('TNI-AL')" class="dropdown-item" href="#">TNI-AL</a></li>
-                        <li><a @click="filterByMatra('MENHAN')" class="dropdown-item" href="#">MENHAN</a></li>
-                    </ul>
-                </div>
-                <div class="mt-3">
-                    <label for="startDate">Start Date:</label>
-                    <input type="date" id="startDate" v-model="startDate" @change="filterByDateRange">
+                <div class="d-flex justify-content-start align-items-center mb-3">
+                    <div class="btn-group me-3">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Filter Kondisi
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a @click="filterByCondition('Bekas')" class="dropdown-item" href="#">Bekas</a></li>
+                            <li><a @click="filterByCondition('Baru')" class="dropdown-item" href="#">Baru</a></li>
+                            <li><a @click="filterByCondition('Rusak')" class="dropdown-item" href="#">Rusak</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group me-3">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Filter Matra
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a @click="filterByMatra('TNI-AU')" class="dropdown-item" href="#">TNI-AU</a></li>
+                            <li><a @click="filterByMatra('TNI-AD')" class="dropdown-item" href="#">TNI-AD</a></li>
+                            <li><a @click="filterByMatra('TNI-AL')" class="dropdown-item" href="#">TNI-AL</a></li>
+                            <li><a @click="filterByMatra('MENHAN')" class="dropdown-item" href="#">MENHAN</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group me-3">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Filter Jenis
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a @click="filterByJenis('Senjata')" class="dropdown-item" href="#">Senjata</a></li>
+                            <li><a @click="filterByJenis('Tank')" class="dropdown-item" href="#">Tank</a></li>
+                            <li><a @click="filterByJenis('Pesawat')" class="dropdown-item" href="#">Pesawat</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <label for="startDate">Start Date:</label>
+                        <input type="date" id="startDate" v-model="startDate" @change="filterByDateRange">
 
-                    <label for="endDate" class="ms-3">End Date:</label>
-                    <input type="date" id="endDate" v-model="endDate" @change="filterByDateRange">
+                        <label for="endDate" class="ms-3">End Date:</label>
+                        <input type="date" id="endDate" v-model="endDate" @change="filterByDateRange">
+                    </div>
                 </div>
                 <table class="table table-striped table-bordered">
                     <thead>
@@ -112,9 +124,12 @@
                 }
             },
             filterByMatra(matra) {
-                console.log(matra)
                 this.filteredMilitaries = this.militaries.filter(military => military.matra === matra);
-                console.log(this.filteredMilitaries)
+            },
+            filterByJenis(jenis) {
+                
+                this.filteredMilitaries = this.militaries.filter(military => military.jenis === jenis);
+                console.log(this.militaries)
             },
             filterByDateRange() {
                 if (this.startDate && this.endDate) {
