@@ -18,10 +18,10 @@
                     </div>
                     <div class="mb-3">
                         <label>Jenis</label>
-                        <select v-model="military.jenis" class="form-control">
-                            <option value="senjata">Senjata</option>
-                            <option value="kendaraan">Kendaraan</option>
-                            <option value="pesawat">Pesawat</option>
+                        <select class="form-control">
+                            <option :value="'senjata'" :selected="military.jenis === 'senjata'">Senjata</option>
+                            <option :value="'kendaraan'" :selected="military.jenis === 'kendaraan'">Kendaraan</option>
+                            <option :value="'pesawat'" :selected="military.jenis === 'pesawat'">Pesawat</option>
                         </select>
                         <span class="text-danger" v-if="this.errorList.jenis && !savedSuccessfully">{{ this.errorList.jenis[0] }}</span>
                     </div>
@@ -32,10 +32,10 @@
                     </div>
                     <div class="mb-3">
                         <label>Kondisi</label>
-                        <select v-model="military.kondisi" class="form-control">
-                            <option value="senjata">Baru</option>
-                            <option value="kendaraan">Bekas</option>
-                            <option value="pesawat">Rusak</option>
+                        <select class="form-control">
+                            <option :value="'senjata'" :selected="military.kondisi === 'senjata'">Baru</option>
+                            <option :value="'kendaraan'" :selected="military.kondisi === 'kendaraan'">Bekas</option>
+                            <option :value="'pesawat'" :selected="military.kondisi === 'pesawat'">Rusak</option>
                         </select>
                         <span class="text-danger" v-if="this.errorList.kondisi && !savedSuccessfully">{{ this.errorList.kondisi[0] }}</span>
                     </div>
@@ -56,11 +56,11 @@
                     </div>
                     <div class="mb-3">
                         <label>Matra</label>
-                        <select v-model="military.matra" class="form-control">
-                            <option value="tni-au">TNI AU</option>
-                            <option value="tni-ad">TNI AD</option>
-                            <option value="tni-al">TNI AL</option>
-                            <option value="kemhan">KEMHAN</option>
+                        <select class="form-control">
+                            <option :value="'tni-au'" :selected="military.matra === 'tni-au'">TNI AU</option>
+                            <option :value="'tni-ad'" :selected="military.matra === 'tni-ad'">TNI AD</option>
+                            <option :value="'tni-al'" :selected="military.matra === 'tni-al'">TNI AL</option>
+                            <option :value="'kemhan'" :selected="military.matra === 'kemhan'">KEMHAN</option>
                         </select>
                         <span class="text-danger" v-if="this.errorList.matra && !savedSuccessfully">{{ this.errorList.matra[0] }}</span>
                     </div>
@@ -95,6 +95,7 @@
             axios.get(`http://localhost:8000/api/militaries/${militaryId}`).then(res => {
                 this.military = res.data.militaries;
             })
+            
         },
         updateMilitary() {
             let myThis = this;
