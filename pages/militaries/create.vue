@@ -111,7 +111,7 @@
             formData.append('tahun_produksi', this.military.tahun_produksi);
             formData.append('tanggal_perolehan', this.military.tanggal_perolehan);
             formData.append('matra', this.military.matra);
-            console.log(this.military.kondisi)
+            console.log(formData)
 
             axios.post('http://localhost:8000/api/militaries', formData).then(res => { 
                 this.military.nama = '';

@@ -99,47 +99,45 @@
         },
         updateMilitary() {
             let myThis = this;
-            
-            let reader = new FileReader();
-            reader.readAsDataURL(this.military.gambar);
-            reader.onload = function () {
-                myThis.military.gambar = reader.result;
+            this.isLoading = true;
+            this.isLoadingTitle = "Updating";
+            let formData = new FormData();
+            formData.append('gambar', this.military.gambar);
+            formData.append('nama', this.military.nama);
+            formData.append('jenis', this.military.jenis);
+            formData.append('type', this.military.type);
+            formData.append('kondisi', this.military.kondisi);
+            formData.append('tahun_produksi', this.military.tahun_produksi);
+            formData.append('tanggal_perolehan', this.military.tanggal_perolehan);
+            formData.append('matra', this.military.matra);
 
-                axios.put(`http://localhost:8000/api/militaries/${myThis.militaryId}/update`, myThis.military).then(res => {
-                    console.log(res, 'res');
+            console.log(formData)
 
-                    myThis.military.nama = '';
-                    myThis.military.jenis = '';
-                    myThis.military.type = '';
-                    myThis.military.kondisi = '';
-                    myThis.military.tahun_produksi = '';
-                    myThis.military.tanggal_perolehan = '';
-                    myThis.military.matra = '';
-                    myThis.military.gambar = '';
+            axios.post(`http://localhost:8000/api/militaries/${this.militaryId}/update`, formData).then(res => {
+                this.errorList = {};  
+                this.savedSuccessfully = true;
+                this.isLoading = false;
 
-                    Swal.fire({
-                        title: "Selamat!",
-                        text: "Ubah Data Berhasil!",
-                        icon: "success"
-                    }).then(() => {
-                        myThis.$router.push('/militaries');
-                    });
-                })
-                .catch(function (error) {
-                    console.log(error, 'errors')
-                    if(error.response) {
-                        if(error.response.status = 422) {
-                            myThis.errorList = error.response.data.errors;
-                            myThis.isLoading = false;
-                        };  
-                    };
-                    Swal.fire({
-                        icon: "error",
-                        title: "Maaf...",
-                        text: "Ada Kesalahan!"
-                    });
+                Swal.fire({
+                    title: "Selamat!",
+                    text: "Perbarui Data Berhasil!",
+                    icon: "success"
                 });
-            };
+            })
+            .catch(function (error) {
+                console.log(error, 'errors')
+                if(error.response) {
+                    if(error.response.status == 422) {
+                        myThis.errorList = error.response.data.errors;
+                        myThis.isLoading = false;
+                    }
+                }
+                Swal.fire({
+                    icon: "error",
+                    title: "Maaf...",
+                    text: "Ada Kesalahan!"
+                });
+            })
         },
         onFileChange(e) {
             const file = e.target.files[0];
