@@ -11,13 +11,28 @@
                     <div class="btn-group">
                         <DropdownFilter :label="'Filter Kondisi'" :items="['Bekas', 'Baru', 'Rusak']" @item-selected="filterByCondition"></DropdownFilter>
     
-                        <DropdownFilter :label="'Filter Matra'" :items="['TNI-AU', 'TNI-AD', 'TNI-AL', 'MENHAN']" @item-selected="filterByMatra"></DropdownFilter>
+                        <DropdownFilter :label="'Filter Matra'" :items="['TNI-AU', 'TNI-AD', 'TNI-AL', 'KEMHAN']" @item-selected="filterByMatra"></DropdownFilter>
     
                         <DropdownFilter :label="'Filter Jenis'" :items="['Senjata', 'Tank', 'Pesawat']" @item-selected="filterByJenis"></DropdownFilter>
     
                         <div class="input-group w-25">
                             <input type="text" class="form-control" placeholder="Cari..." v-model="searchQuery">
                             <button class="btn btn-outline-secondary" type="button" @click="searchMilitary">Cari</button>
+                        </div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <label for="startDate" class="form-label mb-1">Mulai Tanggal:</label>
+                            <input type="date" id="startDate" v-model="startDate" class="form-control">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="endDate" class="form-label mb-1">Sampai Tanggal:</label>
+                            <input type="date" id="endDate" v-model="endDate" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="endDate" class="form-label mb-1 w-100"><span class="text-white">.</span></label>
+                            <button class="btn btn-primary mt-md-0 mt-2" @click="filterByDateRange">Tampilkan</button>
                         </div>
                     </div>
                 </div>
