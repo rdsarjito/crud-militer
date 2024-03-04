@@ -28,7 +28,6 @@
                             <th>ID</th>
                             <th>Nama</th>
                             <th>Jenis</th>
-                            <th>Type</th>
                             <th>Kondisi</th>
                             <th>Tahun Produksi</th>
                             <th>Tanggal Perolehan</th>
@@ -42,7 +41,6 @@
                             <td>{{ military.id }}</td>
                             <td>{{ military.nama }}</td>
                             <td>{{ military.jenis }}</td>
-                            <td>{{ military.type }}</td>
                             <td>{{ military.kondisi }}</td>
                             <td>{{ military.tahun_produksi }}</td>
                             <td>{{ military.tanggal_perolehan }}</td>
@@ -161,9 +159,8 @@
                 const searchTerm = this.searchQuery.toLowerCase().trim();
                 
                 this.filteredMilitaries = this.militaries.filter(military => {
-                    console.log(military.type.toLowerCase())
                     return military.nama.toLowerCase().includes(searchTerm) || 
-                           military.type.toLowerCase().includes(searchTerm);
+                           military.jenis.toLowerCase().includes(searchTerm);
                 });
             },
         }

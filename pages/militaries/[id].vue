@@ -18,35 +18,30 @@
                     </div>
                     <div class="mb-3">
                         <label>Jenis</label>
-                        <select class="form-control">
-                            <option :value="'senjata'" :selected="military.jenis === 'senjata'">Senjata</option>
-                            <option :value="'kendaraan'" :selected="military.jenis === 'kendaraan'">Kendaraan</option>
-                            <option :value="'pesawat'" :selected="military.jenis === 'pesawat'">Pesawat</option>
+                        <select class="form-control" v-model="military.jenis">
+                            <option :value="'Senjata'" :selected="military.jenis === 'Senjata'">Senjata</option>
+                            <option :value="'Kendaraan'" :selected="military.jenis === 'Kendaraan'">Kendaraan</option>
+                            <option :value="'Pesawat'" :selected="military.jenis === 'Pesawat'">Pesawat</option>
                         </select>
                         <span class="text-danger" v-if="this.errorList.jenis && !savedSuccessfully">{{ this.errorList.jenis[0] }}</span>
                     </div>
                     <div class="mb-3">
-                        <label>Type</label>
-                        <input type="text" v-model="military.type" class="form-control" />
-                        <span class="text-danger" v-if="this.errorList.type">{{ this.errorList.type[0] }}</span>
-                    </div>
-                    <div class="mb-3">
                         <label>Kondisi</label>
-                        <select class="form-control">
-                            <option :value="'senjata'" :selected="military.kondisi === 'senjata'">Baru</option>
-                            <option :value="'kendaraan'" :selected="military.kondisi === 'kendaraan'">Bekas</option>
-                            <option :value="'pesawat'" :selected="military.kondisi === 'pesawat'">Rusak</option>
+                        <select class="form-control" v-model="military.kondisi">
+                            <option :value="'Baru'" :selected="military.kondisi === 'Baru'">Baru</option>
+                            <option :value="'Bekas'" :selected="military.kondisi === 'Bekas'">Bekas</option>
+                            <option :value="'Rusak'" :selected="military.kondisi === 'Rusak'">Rusak</option>
                         </select>
                         <span class="text-danger" v-if="this.errorList.kondisi && !savedSuccessfully">{{ this.errorList.kondisi[0] }}</span>
                     </div>
                     <div class="mb-3">
                         <label>Tahun Produksi</label>
-                        <input type="text" v-model="military.tahun_produksi" class="form-control" />
+                        <input type="date" v-model="military.tahun_produksi" class="form-control" />
                         <span class="text-danger" v-if="this.errorList.tahun_produksi && !savedSuccessfully">{{ this.errorList.tahun_produksi[0] }}</span>
                     </div>
                     <div class="mb-3">
                         <label>Tanggal Perolehan</label>
-                        <input type="text" v-model="military.tanggal_perolehan" class="form-control" />
+                        <input type="date" v-model="military.tanggal_perolehan" class="form-control" />
                         <span class="text-danger" v-if="this.errorList.tanggal_perolehan && !savedSuccessfully">{{ this.errorList.tanggal_perolehan[0] }}</span>
                     </div>
                     <div class="mb-3">
@@ -56,11 +51,11 @@
                     </div>
                     <div class="mb-3">
                         <label>Matra</label>
-                        <select class="form-control">
-                            <option :value="'tni-au'" :selected="military.matra === 'tni-au'">TNI AU</option>
-                            <option :value="'tni-ad'" :selected="military.matra === 'tni-ad'">TNI AD</option>
-                            <option :value="'tni-al'" :selected="military.matra === 'tni-al'">TNI AL</option>
-                            <option :value="'kemhan'" :selected="military.matra === 'kemhan'">KEMHAN</option>
+                        <select class="form-control" v-model="military.matra">
+                            <option :value="'TNI-AU'" :selected="military.matra === 'TNI AU'">TNI AU</option>
+                            <option :value="'TNI-AD'" :selected="military.matra === 'TNI AD'">TNI AD</option>
+                            <option :value="'TNI-AL'" :selected="military.matra === 'TNI AL'">TNI AL</option>
+                            <option :value="'KEMHAN'" :selected="military.matra === 'KEMHAN'">KEMHAN</option>
                         </select>
                         <span class="text-danger" v-if="this.errorList.matra && !savedSuccessfully">{{ this.errorList.matra[0] }}</span>
                     </div>
@@ -102,13 +97,9 @@
             this.isLoadingTitle = "Updating";
             let formData = new FormData();
             
-            if (this.military.gambar) {
-                
-            }
             formData.append('gambar', this.military.gambar);
             formData.append('nama', this.military.nama);
             formData.append('jenis', this.military.jenis);
-            formData.append('type', this.military.type);
             formData.append('kondisi', this.military.kondisi);
             formData.append('tahun_produksi', this.military.tahun_produksi);
             formData.append('tanggal_perolehan', this.military.tanggal_perolehan);
@@ -121,7 +112,6 @@
 
                 myThis.military.nama = '';
                     myThis.military.jenis = '';
-                    myThis.military.type = '';
                     myThis.military.kondisi = '';
                     myThis.military.tahun_produksi = '';
                     myThis.military.tanggal_perolehan = '';

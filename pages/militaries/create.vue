@@ -26,11 +26,6 @@
                         <span class="text-danger" v-if="this.errorList.jenis && !savedSuccessfully">{{ this.errorList.jenis[0] }}</span>
                     </div>
                     <div class="mb-3">
-                        <label>Type</label>
-                        <input type="text" v-model="military.type" class="form-control" />
-                        <span class="text-danger" v-if="this.errorList.type && !savedSuccessfully">{{ this.errorList.type[0] }}</span>
-                    </div>
-                    <div class="mb-3">
                         <label>Kondisi</label>
                         <select v-model="military.kondisi" class="form-control">
                             <option value="Baru">Baru</option>
@@ -84,7 +79,6 @@
             military: {
                 nama: '',
                 jenis: '',
-                type: '',
                 kondisi: '',
                 tahun_produksi: '',
                 tanggal_perolehan: '',
@@ -106,7 +100,6 @@
             formData.append('gambar', this.military.gambar);
             formData.append('nama', this.military.nama);
             formData.append('jenis', this.military.jenis);
-            formData.append('type', this.military.type);
             formData.append('kondisi', this.military.kondisi);
             formData.append('tahun_produksi', this.military.tahun_produksi);
             formData.append('tanggal_perolehan', this.military.tanggal_perolehan);
@@ -116,7 +109,6 @@
             axios.post('http://localhost:8000/api/militaries', formData).then(res => { 
                 this.military.nama = '';
                 this.military.jenis = '';
-                this.military.type = '';
                 this.military.kondisi = '';
                 this.military.tahun_produksi = '';
                 this.military.tanggal_perolehan = '';
