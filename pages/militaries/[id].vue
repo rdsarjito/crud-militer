@@ -95,13 +95,16 @@
             axios.get(`http://localhost:8000/api/militaries/${militaryId}`).then(res => {
                 this.military = res.data.militaries;
             })
-            
         },
         updateMilitary() {
             let myThis = this;
             this.isLoading = true;
             this.isLoadingTitle = "Updating";
             let formData = new FormData();
+            
+            if (this.military.gambar) {
+                
+            }
             formData.append('gambar', this.military.gambar);
             formData.append('nama', this.military.nama);
             formData.append('jenis', this.military.jenis);
@@ -111,18 +114,27 @@
             formData.append('tanggal_perolehan', this.military.tanggal_perolehan);
             formData.append('matra', this.military.matra);
 
-            console.log(formData)
-
             axios.post(`http://localhost:8000/api/militaries/${this.militaryId}/update`, formData).then(res => {
                 this.errorList = {};  
                 this.savedSuccessfully = true;
                 this.isLoading = false;
 
-                Swal.fire({
-                    title: "Selamat!",
-                    text: "Perbarui Data Berhasil!",
-                    icon: "success"
-                });
+                myThis.military.nama = '';
+                    myThis.military.jenis = '';
+                    myThis.military.type = '';
+                    myThis.military.kondisi = '';
+                    myThis.military.tahun_produksi = '';
+                    myThis.military.tanggal_perolehan = '';
+                    myThis.military.matra = '';
+                    myThis.military.gambar = '';
+
+                    Swal.fire({
+                        title: "Selamat!",
+                        text: "Ubah Data Berhasil!",
+                        icon: "success"
+                    }).then(() => {
+                        myThis.$router.push('/militaries');
+                    });
             })
             .catch(function (error) {
                 console.log(error, 'errors')

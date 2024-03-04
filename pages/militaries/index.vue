@@ -8,54 +8,19 @@
             </div>
             <div class="card-body">
                 <div class="card-body-child d-flex justify-content-between align-items-center mb-3">
-                    <div class="btn-group">    
-                        <div class="me-3">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Filter Kondisi
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a @click="filterByCondition('Bekas')" class="dropdown-item" href="#">Bekas</a></li>
-                                <li><a @click="filterByCondition('Baru')" class="dropdown-item" href="#">Baru</a></li>
-                                <li><a @click="filterByCondition('Rusak')" class="dropdown-item" href="#">Rusak</a></li>
-                            </ul>
+                    <div class="btn-group">
+                        <DropdownFilter :label="'Filter Kondisi'" :items="['Bekas', 'Baru', 'Rusak']" @item-selected="filterByCondition"></DropdownFilter>
+    
+                        <DropdownFilter :label="'Filter Matra'" :items="['TNI-AU', 'TNI-AD', 'TNI-AL', 'MENHAN']" @item-selected="filterByMatra"></DropdownFilter>
+    
+                        <DropdownFilter :label="'Filter Jenis'" :items="['Senjata', 'Tank', 'Pesawat']" @item-selected="filterByJenis"></DropdownFilter>
+    
+                        <div class="input-group w-25">
+                            <input type="text" class="form-control" placeholder="Cari..." v-model="searchQuery">
+                            <button class="btn btn-outline-secondary" type="button" @click="searchMilitary">Cari</button>
                         </div>
-                        <div class="me-3">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Filter Matra
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a @click="filterByMatra('TNI-AU')" class="dropdown-item" href="#">TNI-AU</a></li>
-                                <li><a @click="filterByMatra('TNI-AD')" class="dropdown-item" href="#">TNI-AD</a></li>
-                                <li><a @click="filterByMatra('TNI-AL')" class="dropdown-item" href="#">TNI-AL</a></li>
-                                <li><a @click="filterByMatra('MENHAN')" class="dropdown-item" href="#">MENHAN</a></li>
-                            </ul>
-                        </div>
-                        <div class="me-3">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Filter Jenis
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a @click="filterByJenis('Senjata')" class="dropdown-item" href="#">Senjata</a></li>
-                                <li><a @click="filterByJenis('Tank')" class="dropdown-item" href="#">Tank</a></li>
-                                <li><a @click="filterByJenis('Pesawat')" class="dropdown-item" href="#">Pesawat</a></li>
-                            </ul>
-                        </div>
-                        <div class="me-3">
-                            <label for="startDate">Start Date:</label>
-                            <input type="date" id="startDate" v-model="startDate" @change="filterByDateRange">
-
-                            <label for="endDate" class="ms-3">End Date:</label>
-                            <input type="date" id="endDate" v-model="endDate" @change="filterByDateRange">
-                        </div>
-                    </div>
-
-                    <div class="input-group w-25">
-                        <input type="text" class="form-control" placeholder="Cari..." v-model="searchQuery">
-                        <button class="btn btn-outline-secondary" type="button" @click="searchMilitary">Cari</button>
                     </div>
                 </div>
-
-
                 
                 <table class="table table-striped table-bordered">
                     <thead>
@@ -100,9 +65,13 @@
 <script>
     import axios from 'axios';
     import Swal from 'sweetalert2';
+    import DropdownFilter from '../../components/DropDownFilter.vue';
 
     export default {
         name: "militaris",
+        components: {
+            DropdownFilter
+        },
         data() {
             return {
                 militaries: [],
@@ -155,15 +124,28 @@
                 }
             },
             deleteMilitary(militaryId) {
-                axios.delete(`http://localhost:8000/api/militaries/${militaryId}/delete`).then(res => {
-                    this.getMilitaries();
-                });
                 Swal.fire({
-                    title: "Selamat!",
-                    text: "Hapus Data Berhasil!",
-                    icon: "success"
-                }).then(() => {
-                    window.location.reload(true);
+                    title: 'Anda yakin?',
+                    text: 'Apakah Anda yakin ingin menghapus data ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus',
+                    cancelButtonText: 'Tidak',
+                    cancelButtonColor: '#d33',
+                    confirmButtonColor: '#3085d6'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete(`http://localhost:8000/api/militaries/${militaryId}/delete`).then(res => {
+                            this.getMilitaries();
+                        });
+                        Swal.fire({
+                            title: 'Selamat!',
+                            text: 'Hapus Data Berhasil!',
+                            icon: 'success'
+                        }).then(() => {
+                            window.location.reload(true);
+                        });
+                    }
                 });
             },
             getImageUrl(imageName) {
