@@ -66,6 +66,10 @@
         type: Object,
         required: true
       },
+      errorListData: {
+        type: Object,
+        required: true
+      },
       isLoading: {
         type: Boolean,
         default: false
@@ -82,14 +86,20 @@
     data() {
       return {
         military: { ...this.militaryData },
-        errorList: {},
+        errorList: { ...this.errorListData},
         savedSuccessfully: false
       }
     },
     watch: {
       militaryData: {
         handler(newVal) {
-          this.military = { ...newVal }; // Update data military saat prop militaryData berubah
+          this.military = { ...newVal };
+        },
+        deep: true
+      },
+      errorListData: {
+        handler(newVal) {
+          this.errorList = { ...newVal };
         },
         deep: true
       }

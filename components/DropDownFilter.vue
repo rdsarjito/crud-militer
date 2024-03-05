@@ -1,6 +1,6 @@
 <template>
     <div class="me-3">
-        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             {{ label }}
         </button>
         <ul class="dropdown-menu">

@@ -7,7 +7,7 @@
                 </h4>
             </div>
             <div class="card-body">
-                <FormMilitary :militaryData="military" :isLoading="isLoading" :isLoadingTitle="isLoadingTitle" @form-submitted="handleFormSubmitted" buttonText="Save" />
+                <FormMilitary :militaryData="military" :errorListData="errorList" :isLoading="isLoading" :isLoadingTitle="isLoadingTitle" @form-submitted="handleFormSubmitted" buttonText="Save" />
             </div>
         </div>
     </div>
