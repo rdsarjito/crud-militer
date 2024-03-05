@@ -4,6 +4,7 @@
             <div class="card-header">
                 <h4>Data Militer
                     <NuxtLink to="/militaries/create" class="btn btn-primary float-end">Tambah Data</NuxtLink>
+                    <button class="btn btn-info" @click="exportToExcel">Cetak Excel</button>
                 </h4>
             </div>
             <div class="card-body">
@@ -77,7 +78,7 @@
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
-                        <li v-for="page in totalPages" :key="page" class="page-item">
+                        <li class="page-item" :class="{ 'active': currentPage === page }" v-for="page in totalPages" :key="page">
                             <a class="page-link" @click="currentPage = page">{{ page }}</a>
                         </li>
                         <li class="page-item">
@@ -98,6 +99,9 @@
     import axios from 'axios';
     import Swal from 'sweetalert2';
     import DropdownFilter from '../../components/DropDownFilter.vue';
+
+    import ExcelJS from 'exceljs';
+    import FileSaver from 'file-saver';
 
     export default {
         name: "militaris",
@@ -129,6 +133,32 @@
             
         },
         methods: {
+            async exportToExcel() {
+                // Buat instance Excel workbook
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('Data Militer');
+
+                // Tambahkan header ke worksheet
+                worksheet.addRow(['ID', 'Nama', 'Jenis', 'Kondisi', 'Tahun Produksi', 'Tanggal Perolehan', 'Matra']);
+
+                // Loop melalui data yang ditampilkan di halaman saat ini
+                this.paginatedMilitaries.forEach(military => {
+                    worksheet.addRow([
+                        military.id,
+                        military.nama,
+                        military.jenis,
+                        military.kondisi,
+                        military.tahun_produksi,
+                        military.tanggal_perolehan,
+                        military.matra
+                    ]);
+                });
+
+                // Simpan workbook ke file Excel
+                const buffer = await workbook.xlsx.writeBuffer();
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                FileSaver.saveAs(blob, 'Data_Militer.xlsx');
+            },
             getMilitaries() {
                 axios.get(`http://localhost:8000/api/militaries`).then(res => {
                     this.militaries = res.data.militaries;

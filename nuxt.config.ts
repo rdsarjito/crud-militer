@@ -35,9 +35,10 @@ export default defineNuxtConfig({
           type: 'text/javascript'
         }
       ],
+      
     }
   },
   generate: {
     fallback: true
-  }
+  },
 })
