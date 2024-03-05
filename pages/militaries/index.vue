@@ -51,7 +51,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(military, index) in filteredMilitaries" :key="index">
+                        <tr v-for="(military, index) in paginatedMilitaries" :key="index">
                             <td>{{ military.id }}</td>
                             <td>{{ military.nama }}</td>
                             <td>{{ military.jenis }}</td>
@@ -69,7 +69,27 @@
                         </tr>
                     </tbody>
                 </table>
+                <nav class="pagination-container" aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link" :class="{ 'disabled': currentPage === 1 }" @click="currentPage -= 1" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        <li v-for="page in totalPages" :key="page" class="page-item">
+                            <a class="page-link" @click="currentPage = page">{{ page }}</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" :class="{ 'disabled': currentPage === totalPages }" @click="currentPage += 1" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
+           
         </div>
     </div>
 </template>
@@ -89,11 +109,24 @@
                 militaries: [],
                 filteredMilitaries: [],
                 selectedCondition: null,
-                searchQuery: ''
+                searchQuery: '',
+                currentPage: 1,
+                itemsPerPage: 10
+            }
+        },
+        computed: {
+            totalPages() {
+                return Math.ceil(this.filteredMilitaries.length / this.itemsPerPage);
+            },
+            paginatedMilitaries() {
+                const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+                const endIndex = startIndex + this.itemsPerPage;
+                return this.filteredMilitaries.slice(startIndex, endIndex);
             }
         },
         mounted() {
             this.getMilitaries();
+            
         },
         methods: {
             getMilitaries() {
