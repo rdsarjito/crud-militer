@@ -3,11 +3,11 @@
         <div class="card">
             <div class="card-header">
                 <h4>Data Militer
-                    <NuxtLink to="/militaries/create" class="btn btn-primary float-end">Tambah Data</NuxtLink>
-                    <button class="btn btn-info" @click="exportToExcel">Cetak Excel</button>
+                    <button class="btn btn-primary float-end" @click="showConfirmationDialog">Cetak Excel</button>
                 </h4>
             </div>
             <div class="card-body">
+                <NuxtLink to="/militaries/create" class="btn btn-primary">Tambah Data</NuxtLink>
                 <div class="card-body-child d-flex justify-content-between align-items-center mb-3">
                     <div class="btn-group">
                         <DropdownFilter :label="'Filter Kondisi'" :items="['Bekas', 'Baru', 'Rusak']" @item-selected="filterByCondition"></DropdownFilter>
@@ -16,10 +16,7 @@
     
                         <DropdownFilter :label="'Filter Jenis'" :items="['Senjata', 'Kendaraan', 'Pesawat']" @item-selected="filterByJenis"></DropdownFilter>
     
-                        <div class="input-group w-25">
-                            <input type="text" class="form-control" placeholder="Cari..." v-model="searchQuery">
-                            <button class="btn btn-outline-secondary" type="button" @click="searchMilitary">Cari</button>
-                        </div>
+                        <Search @search="searchMilitary"></Search>
                     </div>
                     <div class="row align-items-center">
                         <div class="col-md-4">
@@ -98,15 +95,17 @@
 <script>
     import axios from 'axios';
     import Swal from 'sweetalert2';
-    import DropdownFilter from '../../components/DropDownFilter.vue';
-
     import ExcelJS from 'exceljs';
     import FileSaver from 'file-saver';
+
+    import DropdownFilter from '../../components/DropDownFilter.vue';
+    import Search from '../../components/Search.vue';
 
     export default {
         name: "militaris",
         components: {
-            DropdownFilter
+            DropdownFilter,
+            Search
         },
         data() {
             return {
@@ -133,15 +132,29 @@
             
         },
         methods: {
-            async exportToExcel() {
-                // Buat instance Excel workbook
-                const workbook = new ExcelJS.Workbook();
-                const worksheet = workbook.addWorksheet('Data Militer');
+            async showConfirmationDialog() {
+                const confirmation = await Swal.fire({
+                    title: 'Apakah Anda ingin mencetak?',
+                    text: 'Anda akan mengunduh data dalam format Excel.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Cetak!',
+                    cancelButtonText: 'Batal'
+                });
 
-                // Tambahkan header ke worksheet
+                if (confirmation.isConfirmed) {
+                    this.exportToExcel();
+                }
+            },
+            async exportToExcel() {
+                // Membuat instance Excel workbook
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('Data_Militer');
+
+                // Untuk menambahkan header ke worksheet
                 worksheet.addRow(['ID', 'Nama', 'Jenis', 'Kondisi', 'Tahun Produksi', 'Tanggal Perolehan', 'Matra']);
 
-                // Loop melalui data yang ditampilkan di halaman saat ini
+                // Loop data yang ditampilkan di halaman saat ini
                 this.paginatedMilitaries.forEach(military => {
                     worksheet.addRow([
                         military.id,
@@ -154,7 +167,7 @@
                     ]);
                 });
 
-                // Simpan workbook ke file Excel
+                // Untuk menyimpan workbook ke file Excel
                 const buffer = await workbook.xlsx.writeBuffer();
                 const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                 FileSaver.saveAs(blob, 'Data_Militer.xlsx');
@@ -181,9 +194,7 @@
                 this.filteredMilitaries = this.militaries.filter(military => military.matra === matra);
             },
             filterByJenis(jenis) {
-                
                 this.filteredMilitaries = this.militaries.filter(military => military.jenis === jenis);
-                console.log(this.militaries)
             },
             filterByDateRange() {
                 if (this.startDate && this.endDate) {
@@ -226,21 +237,19 @@
             getImageUrl(imageName) {
                 return `http://localhost:8000/api/militaries/image/${imageName}`;
             },
-            searchMilitary() {
-                
-                if (this.searchQuery.trim() === '') {
+            searchMilitary(query) {
+                if (query.trim() === '') {
                     this.filteredMilitaries = this.militaries;
                     return;
                 }
 
-                const searchTerm = this.searchQuery.toLowerCase().trim();
+                const searchTerm = query.toLowerCase().trim();
                 
                 this.filteredMilitaries = this.militaries.filter(military => {
                     return military.nama.toLowerCase().includes(searchTerm) || 
-                           military.jenis.toLowerCase().includes(searchTerm);
+                        military.jenis.toLowerCase().includes(searchTerm);
                 });
             },
         }
     }
 </script>
-
