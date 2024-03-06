@@ -7,31 +7,32 @@
                 </h4>
             </div>
             <div class="card-body">
-                <NuxtLink to="/militaries/create" class="btn btn-primary">Tambah Data</NuxtLink>
+                <button class="btn btn-primary mt-md-0 mt-2" @click="applyMultipleFilters">Tampilkan</button>
                 <div class="card-body-child d-flex justify-content-between align-items-center mb-3">
                     <div class="btn-group">
-                        <DropdownFilter :label="'Filter Kondisi'" :items="['Bekas', 'Baru', 'Rusak']" @item-selected="filterByCondition"></DropdownFilter>
+                        <DropdownFilter label="Filter Kondisi" :items="['Bekas', 'Baru', 'Rusak']" @item-selected="filterByCondition" />
     
-                        <DropdownFilter :label="'Filter Matra'" :items="['TNI-AU', 'TNI-AD', 'TNI-AL', 'KEMHAN']" @item-selected="filterByMatra"></DropdownFilter>
+                        <DropdownFilter label="Filter Matra" :items="['TNI-AU', 'TNI-AD', 'TNI-AL', 'KEMHAN']" @item-selected="filterByMatra" />
     
-                        <DropdownFilter :label="'Filter Jenis'" :items="['Senjata', 'Kendaraan', 'Pesawat']" @item-selected="filterByJenis"></DropdownFilter>
+                        <DropdownFilter label="Filter Jenis" :items="['Senjata', 'Kendaraan', 'Pesawat']" @item-selected="filterByJenis" />
     
-                        <Search @search="searchMilitary"></Search>
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <label for="startDate" class="form-label mb-1">Dari</label> 
+                                <input type="date" id="startDate" v-model="startDate" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="endDate" class="form-label mb-1">Sampai</label>
+                                <input type="date" id="endDate" v-model="endDate" class="form-control">
+                            </div>
+                        </div>
+                        
                     </div>
-                    <div class="row align-items-center">
-                        <div class="col-md-4">
-                            <label for="startDate" class="form-label mb-1">Mulai Tanggal:</label>
-                            <input type="date" id="startDate" v-model="startDate" class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="endDate" class="form-label mb-1">Sampai Tanggal:</label>
-                            <input type="date" id="endDate" v-model="endDate" class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label mb-1 w-100"><span class="text-white">.</span></label>
-                            <button class="btn btn-primary mt-md-0 mt-2" @click="filterByDateRange">Tampilkan</button>
-                        </div>
-                    </div>
+                    <NuxtLink to="/militaries/create" class="btn btn-primary mt-md-0 mt-2">Tambah Data</NuxtLink>
+                    
+                </div>
+                <div class="row align-items-center">
+                    <Search @search="searchMilitary"></Search>
                 </div>
                 
                 <table class="table table-striped table-bordered">
@@ -112,9 +113,14 @@
                 militaries: [],
                 filteredMilitaries: [],
                 selectedCondition: null,
+                selectedMatra: null,
+                selectedJenis: null,
                 searchQuery: '',
                 currentPage: 1,
-                itemsPerPage: 10
+                itemsPerPage: 10,
+                selectedConditionOptions: [],
+                selectedMatraOptions: [],
+                selectedJenisOptions: []
             }
         },
         computed: {
@@ -129,7 +135,6 @@
         },
         mounted() {
             this.getMilitaries();
-            
         },
         methods: {
             async showConfirmationDialog() {
@@ -176,26 +181,53 @@
                 axios.get(`http://localhost:8000/api/militaries`).then(res => {
                     this.militaries = res.data.militaries;
                     this.filteredMilitaries = this.militaries;
+
+                    this.selectedConditionOptions = [...new Set(this.militaries.map(military => military.kondisi))];
+                    this.selectedMatraOptions = [...new Set(this.militaries.map(military => military.matra))];
+                    this.selectedJenisOptions = [...new Set(this.militaries.map(military => military.jenis))];
                 });
             },
             filterByCondition(condition) {
                 this.selectedCondition = condition;
-                
-                if (condition === 'Bekas') {
-                    this.filteredMilitaries = this.militaries.filter(military => military.kondisi === 'Bekas');
-                    console.log(this.filteredMilitaries)
-                } else if (condition === 'Baru') {
-                    this.filteredMilitaries = this.militaries.filter(military => military.kondisi === 'Baru');
-                } else if (condition === 'Rusak') {
-                    this.filteredMilitaries = this.militaries.filter(military => military.kondisi === 'Rusak');
-                }
+                // this.applyMultipleFilters();
             },
+
             filterByMatra(matra) {
-                this.filteredMilitaries = this.militaries.filter(military => military.matra === matra);
+                this.selectedMatra = matra;
+                // this.applyMultipleFilters();
             },
             filterByJenis(jenis) {
-                this.filteredMilitaries = this.militaries.filter(military => military.jenis === jenis);
+                this.selectedJenis = jenis;
+                // this.applyMultipleFilters();
             },
+
+            applyMultipleFilters() {
+                console.log
+                this.filteredMilitaries = this.militaries;
+
+                if (this.selectedCondition) {
+                    this.filteredMilitaries = this.filteredMilitaries.filter(military => military.kondisi === this.selectedCondition);
+                }
+
+                if (this.selectedMatra) {
+                    this.filteredMilitaries = this.filteredMilitaries.filter(military => military.matra === this.selectedMatra);
+                }
+
+                if (this.selectedJenis) {
+                    this.filteredMilitaries = this.filteredMilitaries.filter(military => military.jenis === this.selectedJenis);
+                }
+
+                if (this.startDate && this.endDate) {
+                    this.filteredMilitaries = this.filteredMilitaries.filter(military => {
+                        const militaryDate = new Date(military.tanggal_perolehan);
+                        const startDate = new Date(this.startDate);
+                        const endDate = new Date(this.endDate);
+
+                        return militaryDate >= startDate && militaryDate <= endDate;
+                    });
+                }
+            },
+            
             filterByDateRange() {
                 if (this.startDate && this.endDate) {
                     this.filteredMilitaries = this.militaries.filter(military => {
@@ -249,7 +281,7 @@
                     return military.nama.toLowerCase().includes(searchTerm) || 
                         military.jenis.toLowerCase().includes(searchTerm);
                 });
-            },
+            }
         }
     }
 </script>

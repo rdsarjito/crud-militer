@@ -59,7 +59,7 @@
     </div>
   </template>
   
-  <script>
+<script>
   export default {
     props: {
       militaryData: {
@@ -114,4 +114,4 @@
       }
     }
   }
-  </script>
+</script>

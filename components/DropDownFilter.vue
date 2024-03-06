@@ -1,13 +1,9 @@
 <template>
     <div class="me-3">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            {{ label }}
-        </button>
-        <ul class="dropdown-menu">
-            <li v-for="(item, index) in items" :key="index">
-                <a @click="selectItem(item)" class="dropdown-item" href="#">{{ item }}</a>
-            </li>
-        </ul>
+        <label class="form-label mb-1">{{ label }}</label>
+        <select class="form-control" v-model="selectedItem" @change="selectItem">
+            <option v-for="(item, index) in items" :key="index" :value="item">{{ item }}</option>
+        </select>
     </div>
 </template>
 
@@ -23,9 +19,14 @@ export default {
             required: true
         }
     },
+    data() {
+        return {
+            selectedItem: null
+        }
+    },
     methods: {
-        selectItem(item) {
-            this.$emit('item-selected', item);
+        selectItem() {
+            this.$emit('item-selected', this.selectedItem);
         }
     }
 }
